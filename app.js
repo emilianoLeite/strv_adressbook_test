@@ -1,10 +1,10 @@
 const express = require('express');
-const logger = require('morgan');
-
+const config = require('./config');
 const app = express();
 
 app.use(express.json());
-app.use(logger('dev'));
+
+config(app);
 
 app.get('/', (request, response) => {
   response.send('Hello World').status(200);
