@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "watch": "node-dev app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive --exit"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,14 @@
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "firebase": "^5.5.6",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "strong-params": "^0.7.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-http": "^4.2.0",
+    "chai-spies": "^1.0.0",
     "mocha": "^5.2.0",
     "node-dev": "^3.1.3"
   }
