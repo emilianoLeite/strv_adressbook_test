@@ -5,17 +5,21 @@ const firebase = require("firebase");
 // Required for side-effects
 require("firebase/firestore");
 
+const mongoose = require('mongoose');
+
 module.exports = function (app) {
   switch (process.env.NODE_ENV) {
     case 'test':
-      // don't use a logger
+      mongoose.connect('mongodb://localhost/test');
       break;
 
     case 'production':
+      mongoose.connect(process.env.MONGODB_URI);
       app.use(logger('short'));
       break;
 
     default:
+      mongoose.connect(process.env.MONGODB_URI);
       app.use(logger('dev'));
       break;
   }
