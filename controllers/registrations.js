@@ -12,11 +12,11 @@ module.exports = function (app) {
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS);
     bcrypt.hash(password, saltRounds)
       .then((hash) => new User({ email, password: hash }))
+      .then((user) => user.save())
       .then((user) => {
-        user.save(function (error) {
-          if (error) return response.status(422).send({ error });
-          response.status(201).send({ data: 'Sign Up successful!' });
-        });
-      });
+        response.status(201).send({ data: 'Sign Up successful!' });
+      })
+      .catch((error) => response.status(422).send({ error }));
   });
+
 };
