@@ -2,11 +2,11 @@ module.exports = function (app) {
   const contacts = require('../services/contacts')(app);
 
   // create
-  app.post('/contacts', (request, response) => {
-    const requestData = request.body;
+  app.post('/contacts', (req, res) => {
+    const requestData = req.body;
 
     contacts.create(requestData)
-      .then((data) => response.status(201).send({ data }))
-      .catch((error) => response.status(422).send({ error }));
+      .then((data) => res.status(201).send({ data }))
+      .catch((error) => res.status(422).send({ error }));
   });
 };
