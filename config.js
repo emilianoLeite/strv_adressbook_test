@@ -34,11 +34,11 @@ module.exports = function (app) {
   };
   firebase.initializeApp(config);
 
-  const db = firebase.firestore();
+  const firestore = firebase.firestore();
   // Disable deprecated features
-  db.settings({
+  firestore.settings({
     timestampsInSnapshots: true
   });
 
-  app.set('db', db);
+  app.set('firestore', firestore);
 }

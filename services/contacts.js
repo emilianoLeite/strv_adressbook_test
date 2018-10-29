@@ -10,7 +10,7 @@ module.exports = (app) => {
           'name', 'phone', 'email', { address: ['street', 'number', 'zipcode'] }
         ).value();
 
-        app.get('db').collection("contacts")
+        app.get('firestore').collection("contacts")
           .add(permittedParams)
           .then((docRef) => resolve({ id: docRef.id, ...permittedParams }))
           .catch(reject);
