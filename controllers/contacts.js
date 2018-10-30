@@ -1,7 +1,10 @@
 module.exports = function (app) {
   const contacts = require('../services/contacts')(app);
+  const validateJWT = require('../middlewares/validate_jwt')(app);
 
-  // create
+  app.use('/contacts*', validateJWT);
+
+
   app.post('/contacts', (req, res) => {
     const requestData = req.body;
 
