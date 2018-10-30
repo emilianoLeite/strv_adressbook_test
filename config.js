@@ -36,4 +36,6 @@ module.exports = function (app) {
     timestampsInSnapshots: true
   });
   app.set('firestore', firestore);
+
+  app.set('secret_key', process.env.SECRET_KEY)
 }
