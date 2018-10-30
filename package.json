@@ -2,7 +2,7 @@
   "name": "strv_adressbook_test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "watch": "node-dev app.js",
@@ -13,8 +13,8 @@
     "url": "git+https://github.com/emilianoLeite/strv_adressbook_test.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Emiliano Leite",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/emilianoLeite/strv_adressbook_test/issues"
   },
