@@ -1,25 +1,21 @@
-require('dotenv').config();
-const logger = require('morgan');
-
-const firebase = require("firebase");
-// Required for side-effects
-require("firebase/firestore");
-
-const mongoose = require('mongoose');
-
 module.exports = function (app) {
-  switch (process.env.NODE_ENV) {
-    case 'test':
-      mongoose.connect('mongodb://localhost/test');
-      break;
+  require('dotenv').config();
+  const logger = require('morgan');
 
+  const firebase = require("firebase");
+  // Required for side-effects
+  require("firebase/firestore");
+
+  const mongoose = require('mongoose');
+  const dbConnection = mongoose.createConnection(process.env.MONGODB_URI);
+  app.set('dbConnection', dbConnection);
+
+  switch (process.env.NODE_ENV) {
     case 'production':
-      mongoose.connect(process.env.MONGODB_URI);
       app.use(logger('short'));
       break;
 
     default:
-      mongoose.connect(process.env.MONGODB_URI);
       app.use(logger('dev'));
       break;
   }
@@ -39,6 +35,5 @@ module.exports = function (app) {
   firestore.settings({
     timestampsInSnapshots: true
   });
-
   app.set('firestore', firestore);
 }

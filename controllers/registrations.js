@@ -1,5 +1,5 @@
 module.exports = function (app) {
-  const User = require('../models/user');
+  const User = require('../models/user')(app.get('dbConnection'));
   const bcrypt = require('bcrypt');
 
   app.post('/sign_up', (req, res) => {

@@ -13,7 +13,7 @@ registrationsController(config.mockApp);
 chai.use(chaiHttp);
 
 beforeEach(() => {
-  config.dbConn.deleteModel(/.+/);
+  mockApp.get('dbConnection').deleteModel(/.+/);
 });
 
 describe('POST sign_up/', () => {
