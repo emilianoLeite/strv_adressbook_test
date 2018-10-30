@@ -52,7 +52,7 @@ describe('POST sign_up/', () => {
           .send({ email: 'valid@email.com', password: '2134' })
           .end((err, res) => {
             res.should.have.status(201);
-            res.body.data.should.eql('Sign up successful!')
+            res.body.data.should.eql('Sign Up successful!')
             done();
           });
 
