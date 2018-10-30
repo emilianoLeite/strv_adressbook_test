@@ -10,6 +10,8 @@ const dbConnection = mongoose.createConnection('mongodb://localhost/test');
 
 mockApp.set('dbConnection', dbConnection);
 
+mockApp.set('secret_key', 'test_secret_key');
+
 module.exports = {
   mockApp
 };
