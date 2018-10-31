@@ -9,7 +9,7 @@ module.exports = (app) => {
         if (err) {
           return res.send({ error: err.message }).status(401);
         } else {
-          req.currentUser = payload;
+          req.currentUserId = payload.id;
           next();
         }
       });
