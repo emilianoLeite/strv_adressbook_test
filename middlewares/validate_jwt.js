@@ -7,14 +7,14 @@ module.exports = (app) => {
 
       jwt.verify(token, app.get('secret_key'), (err, payload) => {
         if (err) {
-          return res.send({ error: err.message }).status(401);
+          return res.status(401).send({ error: err.message });
         } else {
           req.currentUserId = payload.id;
           next();
         }
       });
     } else {
-      res.send({ error: 'Invalid token' }).status(401);
+      res.status(401).send({ error: 'Invalid token' })
     }
   }
 };
