@@ -52,6 +52,6 @@ module.exports = function (app) {
         ));
       })
       .then((jwt) => res.send({ data: jwt }))
-      .catch(error => res.send({ error }).status(422));
+      .catch(error => res.status(422).send({ error }));
   });
 };
