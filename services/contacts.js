@@ -7,7 +7,8 @@ module.exports = (app) => {
         const params = Parameters(contactData);
 
         const permittedParams = params.permit(
-          'name', 'phone', 'email', { address: ['street', 'number', 'zipcode'] }
+          'userId', 'name', 'phone', 'email',
+          { address: ['street', 'number', 'zipcode'] }
         ).value();
 
         app.get('firestore').collection("contacts")
