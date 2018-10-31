@@ -11,6 +11,10 @@ module.exports = (app) => {
           { address: ['street', 'number', 'zipcode'] }
         ).value();
 
+        if (Object.keys(permittedParams).length === 0) {
+          return reject('Contact info cannot be blank');
+        }
+
         app.get('firestore').collection("contacts")
           .add(permittedParams)
           .then((docRef) => resolve({ id: docRef.id, ...permittedParams }))

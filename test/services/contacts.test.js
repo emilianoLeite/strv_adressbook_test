@@ -14,59 +14,97 @@ chai.use(chaiAsPromised);
 let contacts;
 
 describe('#create', () => {
-  describe('when the firebase document creation is successful', () => {
-
-    beforeEach(() => {
-      const mockApp = chai.spy.interface({
-        get(key) {
-          return {
-            collection: (collectionName) => {
-              return {
-                add: () => {
-                  return Promise.resolve({ id: 'Document ID' } )
+  describe('when sending some data', () => {
+    describe('when the firebase document creation is successful', () => {
+      beforeEach(() => {
+        const mockApp = chai.spy.interface({
+          get(key) {
+            return {
+              collection: (collectionName) => {
+                return {
+                  add: () => {
+                    return Promise.resolve({ id: 'Document ID' })
+                  }
                 }
               }
             }
           }
-        }
+        });
+        contacts = contactsService(mockApp);
       });
 
-      contacts = contactsService(mockApp);
+      it('returns the fields of the created document', (done) => {
+        contacts.create({ name: 'Contact Name', email: 'abc@email.com' }).should
+          .eventually
+          .eql({
+            id: 'Document ID',
+            name: 'Contact Name',
+            email: 'abc@email.com',
+          })
+          .notify(done);
+      });
     });
-    it('returns the fields of the created document', (done) => {
-      contacts.create({ name: 'Contact Name', email: 'abc@email.com' }).should
-        .eventually
-        .eql({
-          id: 'Document ID',
-          name: 'Contact Name',
-          email: 'abc@email.com',
-        })
-        .notify(done);
+
+    describe('when the firebase document creation is not successful', () => {
+      beforeEach(() => {
+        const mockApp = chai.spy.interface({
+          get(key) {
+            return {
+              collection: (collectionName) => {
+                return {
+                  add: () => Promise.reject('Unknown error')
+                }
+              }
+            }
+          }
+        });
+
+        contacts = contactsService(mockApp);
+      });
+
+      it('propagates the rejected promise', (done) => {
+        contacts.create({ name: 'Contact Name', email: 'abc@email.com' }).should
+          .eventually
+          .be.rejectedWith('Unknown error')
+          .notify(done);
+      });
     });
   });
 
-  describe('when the firebase document creation is not successful', () => {
-    beforeEach(() => {
-      const mockApp = chai.spy.interface({
-        get(key) {
-          return {
-            collection: (collectionName) => {
-              return {
-                add: () => Promise.reject('Unknown error')
+  describe('when sending no data', () => {
+    const mockApp = chai.spy.interface({
+      get(key) {
+        return {
+          collection: (collectionName) => {
+            return {
+              add: () => {
+                return Promise.resolve({ id: 'Document ID' })
               }
             }
           }
         }
-      });
+      }
+    });
 
+    beforeEach(() => {
       contacts = contactsService(mockApp);
     });
 
-    it('propagates the rejected promise', (done) => {
-      contacts.create({ name: 'Contact Name', email: 'abc@email.com' }).should
+    it('returns an error message', (done) => {
+      contacts.create({}).should
         .eventually
-        .be.rejectedWith('Unknown error')
+        .be.rejectedWith('Contact info cannot be blank')
         .notify(done);
+    });
+
+    it('does not try to save data into firebase', (done) => {
+      contacts.create({}).should
+        .eventually
+        .be.rejected
+
+      mockApp.get.should.not.have.been.called();
+
+      done();
     });
   });
 });
