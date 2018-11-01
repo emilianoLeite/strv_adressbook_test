@@ -14,7 +14,7 @@ module.exports = function (app) {
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS);
     bcrypt.hash(password, saltRounds)
       .then((hash) => new User({ email, password: hash }))
-      .then((user) => user.save())
+      .then((user) => Promise.resolve(user.save()))
       .then((user) => {
         res.status(201).send({ data: 'Sign Up successful!' });
       })
