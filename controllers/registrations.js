@@ -18,7 +18,7 @@ module.exports = function (app) {
       .then((user) => {
         res.status(201).send({ data: 'Sign Up successful!' });
       })
-      .catch((error) => res.status(422).send({ error }));
+      .catch((error) => res.status(422).send({ error: error.message }));
   });
 
   app.post('/sign_in', (req, res) => {

@@ -4,7 +4,6 @@ module.exports = function (app) {
 
   app.use('/contacts*', validateJWT);
 
-
   app.post('/contacts', (req, res) => {
     const requestData = req.body;
     contacts.create({ ...requestData, userId: req.currentUserId })
