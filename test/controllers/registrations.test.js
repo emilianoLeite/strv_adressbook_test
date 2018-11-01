@@ -12,8 +12,8 @@ registrationsController(config.mockApp);
 
 chai.use(chaiHttp);
 
-beforeEach(() => {
-  mockApp.get('dbConnection').deleteModel(/.+/);
+afterEach(() => {
+  mockApp.get('dbConnection').model('User').deleteMany({}, () => { });
 });
 
 describe('POST sign_up/', () => {
@@ -46,7 +46,7 @@ describe('POST sign_up/', () => {
     });
 
     describe('and sending all valid data', () => {
-      it.skip('should return HTTP 201 with a success message', (done) => {
+      it('should return HTTP 201 with a success message', (done) => {
         chai.request(mockApp)
           .post('/sign_up')
           .send({ email: 'valid@email.com', password: '2134' })

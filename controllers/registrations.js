@@ -27,8 +27,6 @@ module.exports = function (app) {
     if (email == null || password == null) {
       return res.status(422).send({ error: 'You must supply an email and password' });
     }
-    console.log('finding user')
-
 
     User.findOne({ email }).exec()
       .then((user) => {
