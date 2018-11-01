@@ -60,3 +60,85 @@ describe('POST sign_up/', () => {
     });
   });
 });
+
+describe('POST sign_in/', () => {
+  describe('when not sending an email or password', () => {
+    it('should return HTTP 422 with an error message', (done) => {
+      chai.request(mockApp)
+        .post('/sign_in')
+        .send({ 'email': 'email@email.com' })
+        .end((err, res) => {
+          res.should.have.status(422);
+          res.body.error.should.eql('You must supply an email and password');
+          done();
+        });
+    });
+  });
+
+  describe('when sending all required params', () => {
+    describe('but the user does not exist', () => {
+      it('returns HTTP 422 with an error message', (done) => {
+        chai.request(mockApp)
+          .post('/sign_in')
+          .send({ email: 'email@email.com', password: '1234' })
+          .end((err, res) => {
+            res.should.have.status(422);
+            res.body.error.should.eql('Invalid Credentials');
+            done();
+          });
+      });
+    });
+
+    describe('but the wrong credentials', () => {
+      let userCreated;
+
+      beforeEach(() => {
+        userCreated = new Promise((resolve) => {
+          chai.request(mockApp)
+          .post('/sign_up')
+          .send({ email: 'valid@email.com', password: '1234' })
+          .end((err, res) => { resolve() });
+        });
+      });
+
+      it('returns HTTP 422 with an error message', (done) => {
+        userCreated.then(() => {
+          chai.request(mockApp)
+          .post('/sign_in')
+          .send({ email: 'valid@email.com', password: 'wrong_password' })
+          .end((err, res) => {
+            res.should.have.status(422);
+            res.body.error.should.eql('Invalid Credentials');
+            done();
+          });
+        });
+      });
+    });
+
+    describe('and the correct credentials', () => {
+      let userCreated;
+
+      beforeEach(() => {
+        userCreated = new Promise((resolve) => {
+          chai.request(mockApp)
+            .post('/sign_up')
+            .send({ email: 'valid@email.com', password: '1234' })
+            .end((err, res) => { resolve() });
+        });
+      });
+
+      it('returns HTTP 200 and the generated JWT token', (done) => {
+        userCreated.then(() => {
+          chai.request(mockApp)
+            .post('/sign_in')
+            .send({ email: 'valid@email.com', password: '1234' })
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.data.length.should.eql(171);
+              done();
+            });
+        });
+      });
+    });
+  });
+});
