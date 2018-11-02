@@ -57,7 +57,7 @@ Use this endpoint to login a registered user.
 Use this endpoint to create a new contact for a signed in user.
 
 ### Headers
-- `Authorization - Bearer <JWT token>`
+- `Authorization - Bearer <JWT token>` - required
 
 ### Params
 All params are optional, but at least **one** is required in order to create a contact
@@ -75,3 +75,30 @@ All params are optional, but at least **one** is required in order to create a c
 
 #### Failure
 - `HTTP 422 + Error messages`
+
+# Deploy
+1. In the terminal, set the `heroku` remote:
+
+```bash
+git remote add heroku https://git.heroku.com/strv-adressbook-test.git
+```
+
+2. Add the following variables in the [project's settings](https://dashboard.heroku.com/apps/strv-adressbook-test/settings):
+
+  (_The FIREBASE\_* variables can be obtained accessing your project from the [firebase console](https://console.firebase.google.com)_)
+  ```
+  FIREBASE_API_KEY # from the firebase console
+  FIREBASE_AUTH_DOMAIN # from the firebase console
+  FIREBASE_DATABASE_URL # from the firebase console
+  FIREBASE_PROJECT_ID # from the firebase console
+  FIREBASE_STORAGE_BUCKET # from the firebase console
+  FIREBASE_SENDER_ID # from the firebase console
+  MONGODB_URI # mongodb uri for connecting into your mongodb instance
+  SECRET_KEY # key used to generate JWT tokens
+  ```
+
+3. Push the latest changes:
+
+```bash
+git push heroku master
+```
