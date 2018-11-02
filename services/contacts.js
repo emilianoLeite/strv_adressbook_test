@@ -7,7 +7,7 @@ module.exports = (app) => {
         const params = Parameters(contactData);
 
         const permittedParams = params.permit(
-          'userId', 'name', 'phone', 'email',
+          'name', 'phone', 'email',
           { address: ['street', 'number', 'zipcode'] }
         ).value();
 
@@ -16,7 +16,7 @@ module.exports = (app) => {
         }
 
         app.get('firestore').collection("contacts")
-          .add(permittedParams)
+          .add({ ...permittedParams, userId: contactData.userId })
           .then((docRef) => resolve({ id: docRef.id, ...permittedParams }))
           .catch(reject);
       });

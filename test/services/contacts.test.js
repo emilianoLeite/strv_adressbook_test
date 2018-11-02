@@ -16,15 +16,17 @@ let contacts;
 describe('#create', () => {
   describe('when sending some data', () => {
     describe('when the firebase document creation is successful', () => {
+      const firebaseAddSpy = chai.spy(
+        returns => Promise.resolve({ id: 'Document ID' })
+      );
+
       beforeEach(() => {
         const mockApp = chai.spy.interface({
           get(key) {
             return {
               collection: (collectionName) => {
                 return {
-                  add: () => {
-                    return Promise.resolve({ id: 'Document ID' })
-                  }
+                  add: firebaseAddSpy
                 }
               }
             }
@@ -42,6 +44,18 @@ describe('#create', () => {
             email: 'abc@email.com',
           })
           .notify(done);
+      });
+
+      it('adds the userId when creating the contact', (done) => {
+        contacts.create({
+          name: 'Contact Name', email: 'abc@email.com', userId: '1234'
+        }).should.eventually.be.fulfilled;
+
+        firebaseAddSpy.should.have.been.called.with({
+          name: 'Contact Name', email: 'abc@email.com', userId: '1234'
+        });
+
+        done();
       });
     });
 
@@ -99,6 +113,43 @@ describe('#create', () => {
 
     it('does not try to save data into firebase', (done) => {
       contacts.create({}).should
+        .eventually
+        .be.rejected
+
+      mockApp.get.should.not.have.been.called();
+
+      done();
+    });
+  });
+
+  describe('when only sending the userId', () => {
+    const mockApp = chai.spy.interface({
+      get(key) {
+        return {
+          collection: (collectionName) => {
+            return {
+              add: () => {
+                return Promise.resolve({ id: 'Document ID' })
+              }
+            }
+          }
+        }
+      }
+    });
+
+    beforeEach(() => {
+      contacts = contactsService(mockApp);
+    });
+
+    it('returns an error message', (done) => {
+      contacts.create({ userId: '1234' }).should
+        .eventually
+        .be.rejectedWith('Contact info cannot be blank')
+        .notify(done);
+    });
+
+    it('does not try to save data into firebase', (done) => {
+      contacts.create({ userId: '1234' }).should
         .eventually
         .be.rejected
 
